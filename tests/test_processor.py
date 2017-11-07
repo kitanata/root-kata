@@ -48,3 +48,11 @@ def test_get_driver_not_found():
     result = process.get_driver("Sue")
     result.should.be.none
 
+def test_add_driver_no_dupes():
+    process = Processor()
+    process.process_line("Driver Dan")
+    process.process_line("Driver Dan")
+
+    num_drivers = len(process)
+    num_drivers.should.equal(1)
+    

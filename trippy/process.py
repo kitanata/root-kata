@@ -3,7 +3,7 @@ from .driver import Driver
 class Processor:
 
     def __init__(self):
-        self.drivers = []
+        self.drivers = {}
 
     def __len__(self):
         return len(self.drivers)
@@ -18,17 +18,15 @@ class Processor:
 
         if command == "Driver":
             driver_name = line[1]
-            self.drivers.append(Driver(driver_name))
+
+            if not self.has_driver(driver_name):
+                self.drivers[driver_name] = Driver(driver_name)
 
     def has_driver(self, driver_name):
-        return any([True if d.name == driver_name else False for d in self.drivers])
+        return driver_name in self.drivers
 
     def get_driver(self, driver_name):
-        for d in self.drivers:
-            if d.name == driver_name:
-                return d
-
-        return None
+        return self.drivers.get(driver_name)
 
     def report(self):
         return ""
