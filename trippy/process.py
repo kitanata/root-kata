@@ -1,3 +1,5 @@
 
 class Processor:
-    pass
+
+    def report(self):
+        return ""
