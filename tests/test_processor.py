@@ -56,3 +56,63 @@ def test_add_driver_no_dupes():
     num_drivers = len(process)
     num_drivers.should.equal(1)
 
+def test_process_two_trips_for_one_driver():
+    process = Processor()
+    process.process_line("Driver Dan")
+    process.process_line("Trip Dan 07:15 07:45 17.3")
+    process.process_line("Trip Dan 06:12 06:32 21.8")
+
+    dan = process.get_driver("Dan")
+    num_trips = len(dan)
+    miles_driven = dan.get_total_miles_driven()
+    average_speed = dan.get_average_speed()
+
+    num_trips.should.equal(2)
+    miles_driven.should.equal(39.1)
+    average_speed.should.equal(50)
+
+def test_discard_trips_for_undefined_drivers():
+    process = Processor()
+    process.process_line("Trip Dan 07:15 07:45 17.3")
+    process.process_line("Driver Dan")
+    process.process_line("Trip Dan 06:12 06:32 21.8")
+
+    dan = process.get_driver("Dan")
+    num_trips = len(dan)
+    miles_driven = dan.get_total_miles_driven()
+    average_speed = dan.get_average_speed()
+
+    num_trips.should.equal(1)
+    miles_driven.should.equal(21.8)
+    average_speed.should.equal(65.4)
+
+
+def test_discard_trips_faster_than_100mph():
+    process = Processor()
+    process.process_line("Driver Dan")
+    process.process_line("Trip Dan 06:45 07:45 100.1")
+    process.process_line("Trip Dan 06:12 06:32 21.8")
+
+    dan = process.get_driver("Dan")
+    num_trips = len(dan)
+    miles_driven = dan.get_total_miles_driven()
+    average_speed = dan.get_average_speed()
+
+    num_trips.should.equal(1)
+    miles_driven.should.equal(21.8)
+    average_speed.should.equal(65.4)
+
+def test_discard_trips_slower_than_5mph():
+    process = Processor()
+    process.process_line("Driver Dan")
+    process.process_line("Trip Dan 06:45 07:45 4.9")
+    process.process_line("Trip Dan 06:12 06:32 21.8")
+
+    dan = process.get_driver("Dan")
+    num_trips = len(dan)
+    miles_driven = dan.get_total_miles_driven()
+    average_speed = dan.get_average_speed()
+
+    num_trips.should.equal(1)
+    miles_driven.should.equal(21.8)
+    average_speed.should.equal(65.4)
