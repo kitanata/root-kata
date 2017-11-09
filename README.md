@@ -65,6 +65,16 @@ thread/process. Because of the nature of the exercise (and the fact that the
 input is basically a flat-file database already), I eliminated the question
 altogether.
 
+(It is also concievable that something like this would need a massive
+architecture behind it to service data. I'm sure at Root you are pulling in
+Terrabytes of similar data in an hour/day and need to quickly process it. In
+which case the question isn't only if you use a database, but how many and what
+kind of clusting/sharding scheme you use, how does data pipe through that
+architecture, and how do you queue processing of data, parallelize the
+processing, and other considerations you might have at scale.)
+
+Here I opted to assume that we have a single customer who barely uses the app. :)
+
 3. The input files are all based in the same timezone.
 
 This is a hard one, because doing anything with dates and times in any language
@@ -77,3 +87,38 @@ ISO8601 so are missing this information anyway. In a production environment, if
 I was handed the file and asked to load a database or do any kind of analytics
 on it, I would be very suspect of the validity of the data and it's source.
 This goes doubly so for Root, since the ultimate source is likely a mobile app.
+
+## Testing Approach
+
+I've mostly focused on testing the happy path and behavior through the
+application. This is generally the approach I take to testing. I feel that
+writing tests against a "sad path" before actually seeing the sad path is a
+premature optimization and can lead to test bloat. I like to keep tests as
+small as possible, and as few as needed.
+
+If you have a larger dataset you are testing this application with, that
+dataset could concievably have a line like "driver Dan" vs "Driver Dan". To me
+a different casing represents a flaw in the original data, and the applications
+failure to handle it (at this point in time), is not a flaw in the application
+itself. That to handle different casing for commands (i.e. equating "Driver"
+with "driver"), is in fact a feature of the application.
+
+Since that feature was not specified in the requirements, it hasn't been
+implemented. Of course, if it needed to be a feature then we would just need to
+define it, write a test for it, and implement the test. No biggie.
+
+You will also notice that my tests often have multiple asserts. To me that is
+okay. I think the idea that a single test should have a single assert is flawed
+because it can restrict the robustness of a test. The point of a test is to
+test behavior of a single unit or integration of multiple units. If you need to
+use multiple assertions (within reason) to test that behavior/integration, then
+that isn't only acceptable but it is desirable.
+
+You'll also notice that I completely setup and tear down each test in it's
+entirety. (I don't use test suites or setup and teardown methods.) This is a
+preference of mine because it completely decouples the tests from each other
+and helps keep them from ossifing the codebase. It also reduces side-effects
+between tests. By writing them in this manner, I can be certain that modifying
+one test will have no influence on another.
+
+## Retrospective
