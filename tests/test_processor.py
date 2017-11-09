@@ -116,3 +116,18 @@ def test_discard_trips_slower_than_5mph():
     num_trips.should.equal(1)
     miles_driven.should.equal(21.8)
     average_speed.should.equal(65.4)
+
+def test_process_report_generation():
+    process = Processor()
+    process.process_line("Driver Dan")
+    process.process_line("Driver Alex")
+    process.process_line("Driver Bob")
+    process.process_line("Trip Dan 07:15 07:45 17.3")
+    process.process_line("Trip Dan 06:12 06:32 21.8")
+    process.process_line("Trip Alex 12:01 13:16 42.0")
+
+    report = process.get_report()
+    report[0].should.equal("Alex: 42 miles @ 34 mph")
+    report[1].should.equal("Dan: 39 miles @ 47 mph")
+    report[2].should.equal("Bob: 0 miles")
+

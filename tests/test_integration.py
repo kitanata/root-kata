@@ -22,4 +22,6 @@ def test_big_file():
     with open(fixture_path('big_test_report.txt'), 'r') as f:
         lines = f.readlines()
 
-    (''.join(lines)).should.equal(process.report())
+    report_string = '\n'.join(process.get_report())
+    (''.join(lines)).should.equal(report_string + '\n')
+

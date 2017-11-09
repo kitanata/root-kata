@@ -26,3 +26,14 @@ class Driver:
 
         return (total_miles / total_time) * 60
 
+    def get_report(self):
+        miles = round(self.get_total_miles_driven())
+
+        if not miles:
+            return "{name}: 0 miles".format(name=str(self))
+
+        return "{name}: {miles} miles @ {speed} mph".format(
+                             name=str(self),
+                             miles=round(self.get_total_miles_driven()),
+                             speed=round(self.get_average_speed()))
+

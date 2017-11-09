@@ -4,10 +4,10 @@ from .trip import Trip
 class Processor:
 
     def __init__(self):
-        self.drivers = {}
+        self._drivers = {}
 
     def __len__(self):
-        return len(self.drivers)
+        return len(self._drivers)
 
     def _split_line(self, line):
         return tuple(line.split(' ')) # immutable
@@ -22,7 +22,7 @@ class Processor:
             driver_name = line[1]
 
             if not self.has_driver(driver_name):
-                self.drivers[driver_name] = Driver(driver_name)
+                self._drivers[driver_name] = Driver(driver_name)
 
         elif command == "Trip":
             driver_name = line[1]
@@ -46,10 +46,14 @@ class Processor:
             driver.add_trip(trip)
 
     def has_driver(self, driver_name):
-        return driver_name in self.drivers
+        return driver_name in self._drivers
 
     def get_driver(self, driver_name):
-        return self.drivers.get(driver_name)
+        return self._drivers.get(driver_name)
 
-    def report(self):
-        return ""
+    def get_report(self):
+        drivers = sorted(self._drivers.values(), 
+                         key=lambda x: x.get_total_miles_driven(), 
+                         reverse=True)
+
+        return [d.get_report() for d in drivers]
