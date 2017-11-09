@@ -3,12 +3,17 @@ class Driver:
 
     def __init__(self, driver_name):
         self.name = driver_name
+        self._trips = []
 
     def __str__(self):
         return self.name
 
     def __len__(self):
-        return 1
+        return len(self._trips)
 
-    def get_miles_driven(self):
-        return 17.3
+    def add_trip(self, trip):
+        self._trips.append(trip)
+
+    def total_miles_driven(self):
+        return sum([t.miles for t in self._trips])
+

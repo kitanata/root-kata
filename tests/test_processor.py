@@ -56,34 +56,3 @@ def test_add_driver_no_dupes():
     num_drivers = len(process)
     num_drivers.should.equal(1)
 
-def test_add_trip_for_driver():
-    process = Processor()
-    process.process_line("Driver Dan")
-    process.process_line("Trip Dan 07:15 07:45 17.3")
-
-    dan = process.get_driver("Dan")
-    num_trips = len(dan)
-    num_trips.should.equal(1)
-
-def test_calculate_miles_driven_for_driver():
-    process = Processor()
-    process.process_line("Driver Dan")
-    process.process_line("Trip Dan 07:15 07:45 17.3")
-
-    dan = process.get_driver("Dan")
-    miles_driven = dan.get_miles_driven()
-    miles_driven.should.equal(17.3)
-
-# def test_multiple_trips_for_driver():
-#     process = Processor()
-#     process.process_line("Driver Dan")
-#     process.process_line("Trip Dan 07:15 07:45 17.3")
-#     process.process_line("Trip Dan 06:12 06:32 21.8")
-# 
-#     dan = process.get_driver("Dan")
-#     num_trips = len(dan)
-#     miles_driven = dan.get_miles_driven()
-# 
-#     num_trips.should.equal(2)
-#     miles_driven.should.equal(39.1)
-    
