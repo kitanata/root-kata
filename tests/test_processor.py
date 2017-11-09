@@ -69,7 +69,7 @@ def test_process_two_trips_for_one_driver():
 
     num_trips.should.equal(2)
     miles_driven.should.equal(39.1)
-    average_speed.should.equal(50)
+    average_speed.should.equal(46.92)
 
 def test_discard_trips_for_undefined_drivers():
     process = Processor()

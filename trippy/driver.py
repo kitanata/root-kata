@@ -21,5 +21,8 @@ class Driver:
         if not len(self):
             return 0
 
-        return sum([t.get_speed() for t in self._trips]) / len(self)
+        total_miles = sum([t.miles for t in self._trips])
+        total_time = sum([t.get_time() for t in self._trips])
+
+        return (total_miles / total_time) * 60
 
