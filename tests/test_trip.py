@@ -24,3 +24,13 @@ def test_get_trip_time_cross_hours_minute_less():
     trip = Trip.parse("07:45", "08:05", "17.3")
     trip_time = trip.get_time()
     trip_time.should.equal(20)
+
+def test_get_trip_speed():
+    trip = Trip.parse("07:15", "07:45", "17.3")
+    trip_speed = trip.get_speed()
+    trip_speed.should.equal(34.6)
+
+def test_get_trip_speed2():
+    trip = Trip.parse("06:12", "06:32", "21.8")
+    trip_speed = trip.get_speed()
+    trip_speed.should.equal(65.4)

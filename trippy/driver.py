@@ -14,6 +14,12 @@ class Driver:
     def add_trip(self, trip):
         self._trips.append(trip)
 
-    def total_miles_driven(self):
+    def get_total_miles_driven(self):
         return sum([t.miles for t in self._trips])
+
+    def get_average_speed(self):
+        if not len(self):
+            return 0
+
+        return sum([t.get_speed() for t in self._trips]) / len(self)
 

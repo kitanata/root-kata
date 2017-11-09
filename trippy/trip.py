@@ -19,3 +19,6 @@ class Trip:
         hours = self.end_time.hour - self.start_time.hour
         minutes = self.end_time.minute - self.start_time.minute
         return hours * 60 + minutes
+
+    def get_speed(self):
+        return (self.miles / self.get_time()) * 60
