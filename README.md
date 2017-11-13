@@ -22,7 +22,7 @@ pip install -r requirements.txt
 pytest
 ```
 
-## Architecture Reasoning
+## Assumptions on Approach
 
 Assumptions.
 
@@ -40,20 +40,19 @@ purposes of this excercise.
 I made the second assumption primarily to justify the over-engineering done
 here in order to communicate how I would approach a larger, or longer lasting
 project. If I was merely writing a tool to parse and process data for my own
-use this entire project would be a single, and probably not tested (depending
-on how much I would use the tool, or it's criticality in nature). As with
-anything, it all depends. Is this an ETL like thing where I am loading mission
-critical data? Am I writing something to quickly analyze some data?  Am I
-making a production API? How big is the entire API? Am I writing a patch? Is
+use this entire project would be a single file, and probably not tested
+(depending on how much I would use the tool, or it's criticality in nature). As
+with anything, it all depends. Is this an ETL like thing where I am loading
+mission critical data? Am I writing something to quickly analyze some data?  Am
+I making a production API? How big is the entire API? Am I writing a patch? Is
 this a proof of concept, or a spike of some sort? These are some examples which
 would alter my assumptions and thus method of development.
 
 For a simpler implementation, I would use data primitives, named tuples, and
-functional programming constructs (like the itertools library). I opted for
-classes, because its a bit lowest common denominator for interview questions. I
-would hope that Root would appreciate simplicity of design in using data
-primatives and functional programming constructs, but I've actually been burned
-by that assumption in the past (when it comes to interviews), thus classes.
+functional programming constructs (like the itertools library). I hope the
+folks at Root would appreciate simplicity of design in using data primatives
+and functional programming constructs, but I've actually been burned by that
+assumption in the past (when it comes to interviews), thus classes.
 
 3. The use of a database isn't needed.
 
@@ -65,30 +64,34 @@ thread/process. Because of the nature of the exercise (and the fact that the
 input is basically a flat-file database already), I eliminated the question
 altogether.
 
-(It is also concievable that something like this would need a massive
-architecture behind it to service data. I'm sure at Root you are pulling in
-Terrabytes of similar data in an hour/day and need to quickly process it. In
-which case the question isn't only if you use a database, but how many and what
-kind of clusting/sharding scheme you use, how does data pipe through that
-architecture, and how do you queue processing of data, parallelize the
-processing, and other considerations you might have at scale.)
+4. This application use case is more of a utility than something at scale.
 
-Here I opted to assume that we have a single customer who barely uses the app. :)
+It concievable that something like this would need a massive architecture
+behind it to service data. I'm sure at Root you are pulling in Terrabytes of
+similar data in an hour/day and need to quickly process it. In which case the
+question isn't only if you use a database, but how many and what kind of
+clusting/sharding scheme you use, how does data pipe through that architecture,
+and how do you queue processing of data, parallelize the processing, and other
+considerations you might have at scale.
 
-3. The input files are all based in the same timezone.
+5. The input files are all based in the same timezone.
 
 This is a hard one, because doing anything with dates and times in any language
-is actually very difficult to do right. People make wayyy to many assumptions
-when it comes to times and dates. Since the excercise states that the times
-provided never pass over midnight, I am assuming that this tricky stuff isn't
-part of your reasoning for making a hire, and that this data processor is safe
-to assume all the data is in the same timezone. Also, the times provided aren't
-ISO8601 so are missing this information anyway. In a production environment, if
-I was handed the file and asked to load a database or do any kind of analytics
-on it, I would be very suspect of the validity of the data and it's source.
-This goes doubly so for Root, since the ultimate source is likely a mobile app.
+is actually very difficult to do right. Developers make wayyy to many
+assumptions when it comes to times and dates. Since the excercise states that
+the times provided never pass over midnight, I am assuming that this tricky
+stuff isn't part of your reasoning for making a hire, and that in this data
+processor it is safe to assume all the data is in the same timezone. Also, the
+times provided aren't ISO8601 so are missing this information anyway. In a
+production environment, if I was handed the file and asked to load a database
+or do any kind of analytics on it, I would be very suspect of the validity of
+the data and it's source.  This goes doubly so for Root, since the ultimate
+source is likely a mobile app.
 
 ## Testing Approach
+
+The entire codebase was developed using TDD. Red, Green, Refactor and all that.
+:)
 
 I've mostly focused on testing the happy path and behavior through the
 application. This is generally the approach I take to testing. I feel that
@@ -98,10 +101,10 @@ small as possible, and as few as needed.
 
 If you have a larger dataset you are testing this application with, that
 dataset could concievably have a line like "driver Dan" vs "Driver Dan". To me
-a different casing represents a flaw in the original data, and the applications
-failure to handle it (at this point in time), is not a flaw in the application
-itself. That to handle different casing for commands (i.e. equating "Driver"
-with "driver"), is in fact a feature of the application.
+a different casing represents a flaw in the original data, and the
+application's failure to handle it (at this point in time), is not a flaw in
+the application itself. That to handle different casing for commands (i.e.
+equating "Driver" with "driver"), is in fact a feature of the application.
 
 Since that feature was not specified in the requirements, it hasn't been
 implemented. Of course, if it needed to be a feature then we would just need to
@@ -122,3 +125,22 @@ between tests. By writing them in this manner, I can be certain that modifying
 one test will have no influence on another.
 
 ## Retrospective
+
+Overall, I am quite happy with this code. Although I am sure there are ways to
+improve it, I feel it is clean, small, and accomplishes the goals and
+requirements of the excercise. I went back and forth a few times on using other
+idioms in Python. Should I just use dicts and named tuples? Should I use
+classes? Should I use itertools, or some fancy library? Should I opt for simple
+and straight foward? 
+
+I feel like taking a simple and straight forward approach is the right one in
+most cases, so that is what I did here. That has the additional benefit that
+non-Python people can understand what you are doing, and it looks rather clean.
+
+Also, you'll notice I didn't use any "design patterns" in my code. I don't do
+that, like... ever. If you try to write Python like you write Java, you're
+doing it wrong. :)
+
+"Always write your code like the person who must maintain it is a murderous
+psycopath who knows where you live." ~ Unknown Dev
+
